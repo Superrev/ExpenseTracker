@@ -7,10 +7,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import java.beans.PropertyVetoException;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 
 public class DatabaseServlet extends HttpServlet {
 
@@ -51,7 +48,34 @@ public class DatabaseServlet extends HttpServlet {
         }
     }
 
+//    public void createExpenseTable() {
+//        try {
+//            Class.forName(JDBC_DRIVER);
+//            Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
+//            Statement stmt = conn.createStatement();
+//            stmt.executeUpdate("CREATE TABLE expense_table ( id INTEGER IDENTITY, expenseName VARCHAR(256), expenseAmount VARCHAR(256),expenseDate VARCHAR(256), categoryType VARCHAR(256))");
+//
+//            stmt.close();
+//            conn.close();
+//        } catch (Exception e) {
+//            System.out.println("Table Already Exists");
+//        }
+//    }
+
+
+
     private void testInitalLoad() {
+        try {
+            Class.forName(JDBC_DRIVER);
+            Connection conn = DriverManager.getConnection(DB_URL,USER,PASS);
+            Statement stmt = conn.createStatement();
+            stmt.executeUpdate("CREATE TABLE expense_table ( id INTEGER IDENTITY, expenseName VARCHAR(256), expenseAmount VARCHAR(256),expenseDate VARCHAR(256), categoryType VARCHAR(256))");
+
+            stmt.close();
+            conn.close();
+        } catch(Exception e) {
+            System.out.println("Table Already Exists");
+        }
         try {
             Connection connection = DatabaseServlet.getConnection();
             if(connection != null) {
@@ -63,6 +87,7 @@ public class DatabaseServlet extends HttpServlet {
                 System.out.println("ERROR: connection is NULL");
             }
         }
+
         catch(SQLException sqle){
             try {
                 System.out.println("NOTE: DATABASE DOES NOT EXIST, CREATING DATABASE");
@@ -90,6 +115,24 @@ public class DatabaseServlet extends HttpServlet {
             System.out.println("ERROR: connection is NULL");
         }
     }
+
+//    public void readAllRecords(boolean printMe) throws Exception {
+//        Class.forName(JDBC_DRIVER);
+//        Connection conn = DriverManager.getConnection(DB_URL,USER,PASS);
+//        Statement stmt = conn.createStatement();
+//        ResultSet rs = stmt.executeQuery("SELECT id,postitTitle,expenseName,expenseAmount,expenseDate,categoryType FROM postit_table");
+//        while (rs.next()) {
+//            String rowResults = rs.getInt("id") + " -- " + rs.getString("postitTitle") + " -- " + rs.getString("postitContent") + " -- " + rs.getString("categoryDescription");
+//
+//            if (printMe) {
+//                System.out.println(rowResults);
+//            }
+//        }
+//
+//        rs.close();
+//        stmt.close();
+//        conn.close();
+//    }
 
     public void destroy()
     {
